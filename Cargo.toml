@@ -1,0 +1,11 @@
+[package]
+
+name = "mimic"
+version = "0.0.1"
+authors = ["Ben Anderson <gravityscore@gmail.com>"]
+
+[dependencies.terminal]
+git = "https://github.com/GravityScore/Terminal"
+
+[dependencies.jni]
+git = "https://github.com/GravityScore/jni-rs"
