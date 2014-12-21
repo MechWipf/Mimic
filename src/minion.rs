@@ -52,9 +52,9 @@ impl Minion {
 		let mut letter_index = 0;
 		for x in range(0, DEFAULT_WIDTH) {
 			let CharRange {ch, next} = text.char_range_at(letter_index);
-			let foreground = color.char_at(x as uint);
+			let foreground = color.char_at((x + DEFAULT_WIDTH) as uint);
 			let foreground_color = color::to_hex(foreground);
-			let background = color.char_at((x + DEFAULT_WIDTH) as uint);
+			let background = color.char_at(x as uint);
 			let background_color = color::to_hex(background);
 
 			manager.set_character(self.window_id, ch, x, line);
@@ -69,12 +69,14 @@ impl Minion {
 	pub fn advance(&self, manager: &mut Manager) {
 		self.java_object.call("advance", &[], Type::Void).unwrap();
 
-		let text = self.java_object.call("getLine", &[Value::Int(0)], Type::String)
-			.unwrap();
-		let color = self.java_object.call("getColorLine", &[Value::Int(1)], Type::String)
-			.unwrap();
+		for y in range(0, DEFAULT_HEIGHT) {
+			let text = self.java_object.call("getLine", &[Value::Int(y as i32)], Type::String)
+				.unwrap().to_string();
+			let color = self.java_object.call("getColorLine", &[Value::Int(y as i32)],
+				Type::String).unwrap().to_string();
 
-		self.update_line(manager, 0, text.to_string().as_slice(), color.to_string().as_slice());
+			self.update_line(manager, y, text.as_slice(), color.as_slice());
+		}
 	}
 
 }
