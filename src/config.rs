@@ -14,10 +14,12 @@ use std::io::fs::File;
 
 macro_rules! get(
 	($tree:ident, $name:expr, $method:ident) => (
-		$tree.get(&($name.to_string()))
-			.expect(format!("Configuration option `{}` doesn't exist.", $name).as_slice())
-			.$method()
-			.expect(format!("Option `{}` is of an incorrect type.", $name).as_slice());
+		{
+			let value = try!($tree.get(&($name.to_string()))
+				.ok_or(format!("Configuration option `{}` doesn't exist.", $name)));
+			try!(value.$method()
+				.ok_or(format!("Option `{}` is of an incorrect type.", $name)))
+		}
 	)
 );
 
@@ -41,33 +43,33 @@ pub struct Config {
 impl Config {
 
 	/// Load the configuration from a file.
-	pub fn from_file(path: &Path) -> Config {
+	pub fn from_file(path: &Path) -> Result<Config, String> {
 		let mut file = File::open(path);
-		let contents = file.read_to_end().ok()
-			.expect("Could not read configuration file.");
-		let string = String::from_utf8(contents).ok()
-			.expect("Configuration file is not UTF-8.");
+		let contents = try!(file.read_to_end().ok()
+			.ok_or("Failed to read configuration file.".to_string()));
+		let string = try!(String::from_utf8(contents).ok()
+			.ok_or("Configuration file not valid UTF-8.".to_string()));
 		let json = json::from_str(string.as_slice());
 
 		match json {
 			Ok(decoded) => Config::from_json(decoded),
-			Err(_) => panic!("Failed to load configuration"),
+			Err(err) => Err(format!("Failed to decode JSON file: {}", err)),
 		}
 	}
 
 	/// Load the configuration from a JSON object.
-	fn from_json(json: Json) -> Config {
-		let tree = json.as_object()
-			.expect("Failed to load configuration. Root object is not a dictionary.");
+	fn from_json(json: Json) -> Result<Config, String> {
+		let tree = try!(json.as_object()
+			.ok_or("Root JSON object is not a dictionary.".to_string()));
 
-		Config {
+		Ok(Config {
 			computer_width: get!(tree, "computer width", as_u64) as u32,
 			computer_height: get!(tree, "computer height", as_u64) as u32,
 			pocket_width: get!(tree, "pocket width", as_u64) as u32,
 			pocket_height: get!(tree, "pocket height", as_u64) as u32,
 			enable_http: get!(tree, "enable http", as_boolean),
 			space_limit: get!(tree, "space limit", as_u64),
-		}
+		})
 	}
 
 }

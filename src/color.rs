@@ -5,22 +5,53 @@
 //
 
 
-const WHITE: u32 = 0xf0f0f0;
-const ORANGE: u32 = 0xf2b233;
-const MAGENTA: u32 = 0xe57fd8;
-const LIGHT_BLUE: u32 = 0x99b2f2;
-const YELLOW: u32 = 0xdede6c;
-const LIME: u32 = 0x7fcc19;
-const PINK: u32 = 0xf2b2cc;
-const GRAY: u32 = 0x4c4c4c;
-const LIGHT_GRAY: u32 = 0x999999;
-const CYAN: u32 = 0x4c99b2;
-const PURPLE: u32 = 0xb266e5;
-const BLUE: u32 = 0x3366cc;
-const BROWN: u32 = 0x7f664c;
-const GREEN: u32 = 0x57a64e;
-const RED: u32 = 0xcc4c4c;
-const BLACK: u32 = 0x000000;
+/// ComputerCraft white color.
+pub const WHITE: u32 = 0xf0f0f0;
+
+/// ComputerCraft orange color.
+pub const ORANGE: u32 = 0xf2b233;
+
+/// ComputerCraft magenta color.
+pub const MAGENTA: u32 = 0xe57fd8;
+
+/// ComputerCraft light blue color.
+pub const LIGHT_BLUE: u32 = 0x99b2f2;
+
+/// ComputerCraft yellow color.
+pub const YELLOW: u32 = 0xdede6c;
+
+/// ComputerCraft lime color.
+pub const LIME: u32 = 0x7fcc19;
+
+/// ComputerCraft pink color.
+pub const PINK: u32 = 0xf2b2cc;
+
+/// ComputerCraft gray color.
+pub const GRAY: u32 = 0x4c4c4c;
+
+/// ComputerCraft light gray color.
+pub const LIGHT_GRAY: u32 = 0x999999;
+
+/// ComputerCraft cyan color.
+pub const CYAN: u32 = 0x4c99b2;
+
+/// ComputerCraft purple color.
+pub const PURPLE: u32 = 0xb266e5;
+
+/// ComputerCraft blue color.
+pub const BLUE: u32 = 0x3366cc;
+
+/// ComputerCraft brown color.
+pub const BROWN: u32 = 0x7f664c;
+
+/// ComputerCraft green color.
+pub const GREEN: u32 = 0x57a64e;
+
+/// ComputerCraft red color.
+pub const RED: u32 = 0xcc4c4c;
+
+/// ComputerCraft black color.
+pub const BLACK: u32 = 0x000000;
 
 
 /// Converts a hex color character into a hex color code.
