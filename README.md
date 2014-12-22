@@ -17,9 +17,7 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * Windows and Linux support
 * App Bundles
 * ROM files
-* Improve CPU usage
 * Console API
-* Fix clock speed
 
 ### Usage
 
