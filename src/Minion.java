@@ -27,9 +27,12 @@ public class Minion implements IComputerEnvironment {
 	private Computer computer;
 	private Terminal terminal;
 
-	public Minion(int id, boolean advanced) {
+	private String storageDirectory;
+
+	public Minion(int id, boolean advanced, String storageDirectory) {
 		this.id = id;
 		this.advanced = advanced;
+		this.storageDirectory = storageDirectory;
 
 		// TODO pass in the 51, 19
 		this.terminal = new Terminal(51, 19);
@@ -166,9 +169,9 @@ public class Minion implements IComputerEnvironment {
 		//  path: computer/0
 		//  capacity: 2097152
 
-		String[] paths = path.split(File.separator);
-		String computerID = paths[paths.length - 1];
-		File file = new File("computers", computerID);
+		String[] components = path.split(File.separator);
+		String computerID = components[components.length - 1];
+		File file = new File(this.storageDirectory + File.separator + "computers", computerID);
 		return new FileMount(file, size);
 	}
 

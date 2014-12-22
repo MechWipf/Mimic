@@ -17,6 +17,7 @@ use self::jni::{Class, Object, Value, Type};
 
 use convert;
 use color;
+use storage;
 
 
 /// The default width in cells of a computer.
@@ -53,9 +54,11 @@ impl Minion {
 
 	/// Create a new minion.
 	pub fn new(id: u32, is_color: bool, computer_class: &Class) -> Minion {
+		let storage_dir = storage::storage().as_str().unwrap().to_string();
 		let java_object = computer_class.instance(&[
 			Value::Int(id as i32),
-			Value::Boolean(is_color)
+			Value::Boolean(is_color),
+			Value::String(storage_dir),
 		]).unwrap();
 
 		let title = format!("Computer {}", id);

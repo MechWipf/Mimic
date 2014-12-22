@@ -1,0 +1,15 @@
+
+//
+//  Mimic Configuration File
+//
+
+{
+	// The default width in cells of a terminal window.
+	"terminal width": 51,
+
+	// The default height in cells of a terminal window.
+	"terminal height": 19,
+
+	// Whether the HTTP API is enabled or disabled.
+	"enable http": true,
+}

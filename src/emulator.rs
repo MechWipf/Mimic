@@ -10,7 +10,7 @@ extern crate jni;
 use self::jni::{JavaVM, Class};
 use minion::Minion;
 
-use std::os;
+use storage;
 
 
 /// The emulator class binding the JavaVM and terminal display.
@@ -26,12 +26,7 @@ impl Emulator {
 
 	/// Create a new emulator.
 	pub fn new() -> Emulator {
-		let classpaths = [
-			Path::new("/Users/benanderson/Desktop/mimic/java"),
-			Path::new("/Users/benanderson/Desktop/mimic/java/computercraft.jar"),
-		];
-
-		let mut jvm = JavaVM::new(&classpaths).unwrap();
+		let mut jvm = JavaVM::new(storage::classpath().as_slice()).unwrap();
 		jvm.set_calls_destructor(false);
 
 		let class = jvm.class("Minion").unwrap();
