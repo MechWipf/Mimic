@@ -14,6 +14,7 @@ java:
 
 .PHONY: bundle
 osxbundle: java
+	cargo build
 	rm -rf ./Mimic.app
 	mkdir ./Mimic.app
 	mkdir ./Mimic.app/Contents

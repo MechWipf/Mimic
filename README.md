@@ -64,6 +64,7 @@ Add your own files to ROM by putting them inside the `programs` folder in the Mi
 4. Download and install ComputerCraft.jar
 5. Compile Java code
 6. Compile Rust code
+7. (Optionally) create the application bundles
 
 _Install Rust_
 
@@ -92,6 +93,10 @@ _Compile Java_
 _Compile Rust_
 
 `cd` into the git repository and run `cargo run`. This will download and compile all the dependencies, compile Mimic itself, and (assuming everything was successful) run the emulator.
+
+_Create App Bundles_
+
+An app bundle on OSX is a .app executable file. The basically combine all the project resources into one easy to run package. You can create a `Mimic.app` bundle by running `make osxbundle`. This relies on the previous compilation steps in order to work, so make sure everything is installed and you can compile Mimic without this command first.
 
 ### License
 
