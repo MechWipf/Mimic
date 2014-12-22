@@ -30,7 +30,6 @@ impl Emulator {
 	pub fn new(config: &Config) -> Emulator {
 		let mut jvm = JavaVM::new(storage::classpath().as_slice()).unwrap();
 		jvm.set_calls_destructor(false);
-
 		let class = jvm.class("Minion").unwrap();
 
 		Emulator {
@@ -46,18 +45,21 @@ impl Emulator {
 	pub fn new_minion(&mut self, advanced: bool, pocket: bool) {
 		self.last_id += 1;
 
+		// Get the minion's width and height
 		let (width, height) = if pocket {
 			(self.config.pocket_width, self.config.pocket_height)
 		} else {
 			(self.config.computer_width, self.config.computer_height)
 		};
 
+		// Create its title
 		let title = if pocket {
 			format!("Pocket Computer {}", self.last_id)
 		} else {
 			format!("Computer {}", self.last_id)
 		};
 
+		// Create its options
 		let options = Options {
 			id: self.last_id as u32,
 			advanced: advanced,
@@ -67,6 +69,7 @@ impl Emulator {
 			space_limit: self.config.space_limit,
 		};
 
+		// Create the minion itself
 		let minion = if self.minions.len() == 0 {
 			Minion::new(&options, &self.java_class)
 		} else {
@@ -89,16 +92,18 @@ impl Emulator {
 	pub fn run(&mut self) {
 		while self.is_running() {
 			let mut actions = Vec::new();
+
+			// Advance each minion
 			for minion in self.minions.iter_mut() {
 				minion.advance();
 				let potential = minion.trigger_events();
-
 				match potential {
 					Some(action) => actions.push(action),
 					None => {},
 				}
 			}
 
+			// Handle any returned actions
 			for action in actions.iter() {
 				match action {
 					&Action::NewComputer(advanced) =>

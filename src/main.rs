@@ -21,16 +21,21 @@ mod error;
 
 
 fn main() {
+	// Create the storage directory and default configuration file if needed.
 	storage::create();
+
+	// Load the configuration.
 	let potential = Config::from_file(&storage::config());
 
 	match potential {
 		Ok(config) => {
+			// Successfully loaded. Start the emulator.
 			let mut emulator = Emulator::new(&config);
 			emulator.new_minion(true, false);
 			emulator.run();
 		},
 		Err(message) => {
+			// Failed.
 			println!("Configuration loading failed:\n{}", message);
 
 			let err_window = ErrorWindow::new(&[

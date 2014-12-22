@@ -27,10 +27,14 @@ impl ErrorWindow {
 
 	/// Creates a new error window with the given message.
 	pub fn new(messages: &[&str]) -> ErrorWindow {
+		// Create a terminal
 		let mut term = Terminal::new("Error", WIDTH, HEIGHT);
 		term.cursor_visibility(false);
+
+		// Write the title
 		term.write("Error", (WIDTH - 5) / 2, 3);
 
+		// Write the message lines, centering each
 		let mut i = 0;
 		for message in messages.iter() {
 			term.write(*message, (WIDTH - message.len() as u32) / 2, 6 + i);
@@ -42,7 +46,7 @@ impl ErrorWindow {
 		}
 	}
 
-	/// Renders the message and polls events.
+	/// Updates events so that the UI doesn't freeze.
 	pub fn update(&self) {
 		self.term.events();
 	}

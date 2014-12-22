@@ -5,7 +5,6 @@
 //
 
 
-
 extern crate terminal;
 
 use self::terminal::event::{Key, MouseButton};
@@ -108,7 +107,6 @@ pub fn key_to_lwjgl(key: Key) -> Option<i32> {
 	}
 }
 
-
 /// Converts a mouse button to an LWGJL one.
 pub fn button_to_lwjgl(button: MouseButton) -> i32 {
 	match button {
@@ -117,4 +115,3 @@ pub fn button_to_lwjgl(button: MouseButton) -> i32 {
 		MouseButton::Right => 2,
 	}
 }
-

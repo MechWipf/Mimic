@@ -186,8 +186,7 @@ impl Minion {
 
 		if self.shortcut_timer > -1.0 {
 			if self.term.window.is_key_down(self.shortcut_key) && command_down {
-				let current_time = time();
-				if current_time - self.shortcut_timer >= TIMED_SHORTCUT_DURATION {
+				if time() - self.shortcut_timer >= TIMED_SHORTCUT_DURATION {
 					match self.shortcut_key {
 						Key::R => self.reboot(),
 						Key::S => self.shutdown(),
@@ -218,13 +217,16 @@ impl Minion {
 	pub fn advance(&mut self) {
 		self.java_object.call("advance", &[], Type::Void).unwrap();
 
+		// Check if the cursor flash needs inverting
 		let current_time = time();
 		if current_time - self.cursor_flash_swap_time >= CURSOR_FLASH_RATE {
 			self.cursor_flash = !self.cursor_flash;
 			self.cursor_flash_swap_time = current_time;
 		}
 
+		// Render each terminal line
 		for y in range(0, self.height) {
+			// Get the text line and color line from Java
 			let text = self.java_object.call("getLine", &[
 				Value::Int(y as i32),
 			], Type::String).unwrap().to_string();
@@ -236,7 +238,10 @@ impl Minion {
 			self.update_line(y, text.as_slice(), color.as_slice());
 		}
 
+		// Update the cursor's position, visibility, and color
 		self.update_cursor();
+
+		// Update any timed shortcuts (reboot, shutdown, or terminate)
 		self.update_timed_shortcuts();
 	}
 
@@ -253,11 +258,9 @@ impl Minion {
 		for event in self.term.events().iter() {
 			match event {
 				&Event::KeyDown(key, ref modifiers) => {
-					let (new_result, new_suppress) =
-						self.trigger_shortcuts(key, modifiers);
-					result = new_result;
-					suppress = new_suppress;
-
+					let (r, s) = self.trigger_shortcuts(key, modifiers);
+					result = r;
+					suppress = s;
 					if !suppress {
 						self.trigger_key(key);
 					}
@@ -283,12 +286,12 @@ impl Minion {
 			-> (Option<Action>, bool) {
 		let mut command_down = false;
 		let mut shift_down = false;
-		let osx = os::consts::SYSNAME == "macos";
 
+		// Convert the list of modifiers into boolean variables
 		for modifier in modifiers.iter() {
 			match *modifier {
 				Modifier::Shift => shift_down = true,
-				Modifier::Meta if osx => command_down = true,
+				Modifier::Meta if os::consts::SYSNAME == "macos" => command_down = true,
 				Modifier::Control => command_down = true,
 				_ => {},
 			}
@@ -296,10 +299,23 @@ impl Minion {
 
 		if command_down {
 			match key {
-				Key::N if shift_down => (Some(Action::NewComputer(false)), true),
-				Key::N => (Some(Action::NewComputer(true)), true),
-				Key::B if shift_down => (Some(Action::NewPocketComputer(false)), true),
-				Key::B => (Some(Action::NewPocketComputer(true)), true),
+				// New normal computer
+				Key::N if shift_down =>
+					(Some(Action::NewComputer(false)), true),
+
+				// New advanced computer
+				Key::N =>
+					(Some(Action::NewComputer(true)), true),
+
+				// New normal pocket computer
+				Key::B if shift_down =>
+					(Some(Action::NewPocketComputer(false)), true),
+
+				// New advanced pocket computer
+				Key::B =>
+					(Some(Action::NewPocketComputer(true)), true),
+
+				// Attach a modem
 				Key::A => {
 					if self.modem_attached {
 						self.detach_modem();
@@ -309,10 +325,13 @@ impl Minion {
 
 					(None, true)
 				},
+
+				// Paste
 				Key::V => {
 					self.paste();
 					(None, true)
 				},
+
 				_ => (None, false)
 			}
 		} else {
@@ -332,6 +351,8 @@ impl Minion {
 
 	/// Trigger a char event.
 	pub fn trigger_char(&self, character: char) {
+		// If we're allowed to type this character
+		// Discard any non-ASCII characters. Too difficult.
 		if let Some(_) = VALID_CHARACTERS.find(character) {
 			self.java_object.call("charEvent", &[
 				Value::String(character.to_string()),

@@ -8,6 +8,8 @@ Much of the heavy lifting (such as interfacing with JNI and rendering using Open
 
 The JNI library makes use only of the Java Native Interface. The library is Mac only at the moment (mainly because I can't be bothered installing a Windows/Linux VM to test on other OSes), hence this whole project is Mac only. I'm pretty sure the OpenGL setup won't work on Windows also, but who knows.
 
+I also ignore all non-ASCII characters. Passing these between Rust (which supports Unicode quite well), into C (which doesn't), into Java (which I have no idea about) is just too painful. I've simply ignored any non-English characters, so typing one doesn't do anything.
+
 Feel free to submit a pull request or issue if you have an improvement or feature request.
 
 ### To Do
