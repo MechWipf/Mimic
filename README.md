@@ -17,6 +17,7 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * ROM files
 * Improve CPU usage
 * Console API
+* Fix clock speed
 
 ### Usage
 
@@ -60,22 +61,40 @@ You can add your own files to the ROM by creating a `rom` directory in the data 
 
 ### Building
 
-If you want to build the emulator by yourself, firstly install Rust. There's a simple command on the [Rust Guide](http://doc.rust-lang.org/guide.html) to do this:
+1. Install Rust
+2. Install GLFW
+3. Install Java
+4. Download and install ComputerCraft.jar
+5. Compile Java code
+6. Compile Rust code
+
+_Install Rust_
+
+There's a simple command on the [Rust Guide](http://doc.rust-lang.org/guide.html) to do this:
 
 ```
 curl -s https://static.rust-lang.org/rustup.sh | sudo sh
 ```
 
-Then install GLFW through its [website](http://www.glfw.org/). There's some install instructions on there - should be fairly simple to follow.
+_Install GLFW_
 
-Make sure you also have Java installed (type `javac`), then `cd` into the project folder and run:
+Do this through its [website](http://www.glfw.org/). There's some install instructions on there - should be fairly simple to follow.
 
-```
-make
-cargo run
-```
+_Install Java_
 
-That'll download and compile all the dependencies, compile Mimic itself, and (assuming everything was successful) run the emulator.
+If you're wanting to build this, I'm going to assume you've already done this. If not, Google. You can check you've got Java installed by typing `javac` into the command line. It should spurt out a bunch of configuration options.
+
+_Download and install ComputerCraft.jar_
+
+Go download the latest version of ComputerCraft from [the website](http://www.computercraft.info/). As of writing, it's ComputerCraft 1.65. Rename it to `computercraft.jar`, create a folder called `Resources` in the root of the git repository, and put it in there.
+
+_Compile Java_
+
+`cd` into the git repository and run `make`. This will build all the Java code and put it into `Resources/mimic.jar`.
+
+_Compile Rust_
+
+`cd` into the git repository and run `cargo run`. This will download and compile all the dependencies, compile Mimic itself, and (assuming everything was successful) run the emulator.
 
 ### License
 
