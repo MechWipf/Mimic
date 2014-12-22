@@ -182,6 +182,7 @@ impl Minion {
 	pub fn trigger_mouse(&self, name: &str, x: f32, y: f32, button: MouseButton) {
 		let converted_button = convert::button_to_lwjgl(button);
 		let (cell_x, cell_y) = self.term.to_cell_position(x, y);
+
 		self.java_object.call(name, &[
 			Value::Int(converted_button),
 			Value::Int(cell_x as i32),
@@ -195,6 +196,7 @@ impl Minion {
 		let y = self.term.window.cursor_y();
 		let (cell_x, cell_y) = self.term.to_cell_position(x, y);
 		let direction = if y_delta < 0.0 { -1 } else { 1 };
+
 		self.java_object.call("mouseScrollEvent", &[
 			Value::Int(direction),
 			Value::Int(cell_x as i32),

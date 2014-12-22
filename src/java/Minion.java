@@ -169,7 +169,6 @@ public class Minion implements IComputerEnvironment {
 		String[] paths = path.split(File.separator);
 		String computerID = paths[paths.length - 1];
 		File file = new File("computers", computerID);
-		System.out.println("Save path: " + file.getAbsolutePath());
 		return new FileMount(file, size);
 	}
 
@@ -188,7 +187,6 @@ public class Minion implements IComputerEnvironment {
 			}
 
 			File location = new File(root);
-			System.out.println("Rom: " + location.getAbsolutePath());
 
 			// Add the ROM folder
 			ArrayList<IMount> mounts = new ArrayList<IMount>();

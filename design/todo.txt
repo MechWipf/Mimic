@@ -1,0 +1,16 @@
+
+To do
+
+- Storage folder
+- Configuration options
+- Custom computercraft.jar search path
+- Automatic classpath
+- Flickering
+- App bundle
+
+- Windows and linux support...
+
+- Reboot/shutdown/terminate keys
+- Multiple computers
+- Modems
+- Console API

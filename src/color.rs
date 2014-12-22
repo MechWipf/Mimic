@@ -25,25 +25,7 @@ const BLACK: u32 = 0x000000;
 
 /// Converts a hex color character into a hex color code.
 pub fn character_to_hex(character: char) -> u32 {
-	match character {
-		'0' => BLACK,
-		'1' => RED,
-		'2' => GREEN,
-		'3' => BROWN,
-		'4' => BLUE,
-		'5' => PURPLE,
-		'6' => CYAN,
-		'7' => LIGHT_GRAY,
-		'8' => GRAY,
-		'9' => PINK,
-		'a' => LIME,
-		'b' => YELLOW,
-		'c' => LIGHT_BLUE,
-		'd' => MAGENTA,
-		'e' => ORANGE,
-		'f' => WHITE,
-		_ => panic!("Unrecognized color code {}", character),
-	}
+	number_to_hex(character.to_digit(16).unwrap() as i32)
 }
 
 /// Converts a number into a hex color code.
@@ -65,6 +47,6 @@ pub fn number_to_hex(number: i32) -> u32 {
 		13 => MAGENTA,
 		14 => ORANGE,
 		15 => WHITE,
-		_ => panic!("Unrecognized color number {}", number),
+		_ => panic!("Unrecognized color {}", number),
 	}
 }

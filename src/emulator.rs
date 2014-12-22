@@ -10,6 +10,8 @@ extern crate jni;
 use self::jni::{JavaVM, Class};
 use minion::Minion;
 
+use std::os;
+
 
 /// The emulator class binding the JavaVM and terminal display.
 pub struct Emulator {
