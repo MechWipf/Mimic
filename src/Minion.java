@@ -1,6 +1,9 @@
 
 /*
  * Minion
+ *
+ * Compile with:
+ * javac -cp Resources/computercraft.jar -d ./Resources src/Minion.java
  */
 
 

@@ -5,11 +5,6 @@
 //
 
 
-//
-//  Compile Java code with: javac -cp java/computercraft.jar -d ./java src/java/Minion.java
-//
-
-
 use emulator::Emulator;
 
 mod minion;
