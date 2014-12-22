@@ -10,6 +10,8 @@ extern crate jni;
 
 use std::os;
 use std::str::CharRange;
+use std::io::timer;
+use std::time::duration::Duration;
 
 use self::terminal::Terminal;
 use self::terminal::event::{Event, Modifier, Key, MouseButton};
@@ -29,6 +31,9 @@ const TIMED_SHORTCUT_DURATION: f64 = 1.0;
 
 /// The duration to wait for before advancing the computer.
 const FRAME_DURATION: f64 = 0.0333;
+
+/// The desired time for one frame.
+const DESIRED_FRAME_DURATION: f64 = 1.0 / 20.0;
 
 /// The valid characters that can be typed.
 const VALID_CHARACTERS: &'static str = concat!(
@@ -80,7 +85,7 @@ pub struct Minion {
 	modem_attached: bool,
 	previous_drag_x: i32,
 	previous_drag_y: i32,
-	previous_time: f64,
+	advance_time: f64,
 }
 
 
@@ -137,7 +142,7 @@ impl Minion {
 			modem_attached: false,
 			previous_drag_x: -1,
 			previous_drag_y: -1,
-			previous_time: current_time,
+			advance_time: current_time,
 		}
 	}
 
@@ -223,9 +228,9 @@ impl Minion {
 	pub fn advance(&mut self) {
 		// Advance
 		let current_time = time();
-		if current_time - self.previous_time > FRAME_DURATION {
+		if current_time - self.advance_time > FRAME_DURATION {
 			self.java_object.call("advance", &[], Type::Void).unwrap();
-			self.previous_time = current_time;
+			self.advance_time = current_time;
 		}
 
 		// Check if the cursor flash needs inverting
@@ -265,6 +270,8 @@ impl Minion {
 		let mut result = None;
 		let mut suppress = false;
 
+		let current_time = time();
+
 		for event in self.term.events().iter() {
 			match event {
 				&Event::KeyDown(key, ref modifiers) => {
@@ -285,6 +292,13 @@ impl Minion {
 					self.trigger_scroll(y_delta),
 				_ => {},
 			}
+		}
+
+		// Sleep until the desired duration is up.
+		let final_time = time();
+		let delta = DESIRED_FRAME_DURATION - (final_time - current_time);
+		if delta > 0.0 {
+			timer::sleep(Duration::nanoseconds((delta * 1000.0 * 1000.0 * 1000.0) as i64));
 		}
 
 		result

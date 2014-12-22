@@ -47,7 +47,7 @@ impl ErrorWindow {
 	}
 
 	/// Updates events so that the UI doesn't freeze.
-	pub fn update(&self) {
+	pub fn update(&mut self) {
 		self.term.events();
 	}
 

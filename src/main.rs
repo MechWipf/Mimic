@@ -38,7 +38,7 @@ fn main() {
 			// Failed.
 			println!("Configuration loading failed:\n{}", message);
 
-			let err_window = ErrorWindow::new(&[
+			let mut err_window = ErrorWindow::new(&[
 				"Failed to load configuration.",
 				"Check the command line for more information.",
 			]);

@@ -82,7 +82,7 @@ source = "git+https://github.com/rust-lang/semver#5bff0abf2b6a3156842fd90d0cd126
 [[package]]
 name = "terminal"
 version = "0.0.1"
-source = "git+https://github.com/GravityScore/Terminal#47a7ea2c401bc701fee202a8d836c5d543453e6e"
+source = "git+https://github.com/GravityScore/Terminal#db43a7ce5a68c12f5064b4b9496a6988e3acf17e"
 dependencies = [
  "gl 0.0.2 (git+https://github.com/bjz/gl-rs)",
  "glfw 0.0.1 (git+https://github.com/bjz/glfw-rs)",
