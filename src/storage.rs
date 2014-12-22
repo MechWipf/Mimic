@@ -20,7 +20,10 @@ const STORAGE_DIR_NAME: &'static str = "mimic";
 const CONFIG_FILE_NAME: &'static str = "config.json";
 
 /// The name of the ComputerCraft jar file.
-const JAR_FILE_NAME: &'static str = "computercraft.jar";
+const CC_JAR_FILE_NAME: &'static str = "computercraft.jar";
+
+/// The name of the Mimic jar file.
+const MIMIC_JAR_FILE_NAME: &'static str = "mimic.jar";
 
 
 /// Creates the storage directory and default configuration file, if one doesn't exist.
@@ -78,7 +81,12 @@ pub fn config() -> Path {
 /// Returns the classpath for the Java VM.
 pub fn classpath() -> Vec<Path> {
 	let dir = resources();
-	let mut jar_file = dir.clone();
-	jar_file.push(JAR_FILE_NAME);
-	vec![dir, jar_file]
+
+	let mut cc_file = dir.clone();
+	cc_file.push(CC_JAR_FILE_NAME);
+
+	let mut mimic_file = dir.clone();
+	mimic_file.push(MIMIC_JAR_FILE_NAME);
+
+	vec![mimic_file, cc_file]
 }

@@ -91,11 +91,11 @@ impl Emulator {
 			let mut actions = Vec::new();
 			for minion in self.minions.iter_mut() {
 				minion.advance();
-				let action = minion.trigger_events();
+				let potential = minion.trigger_events();
 
-				match action {
-					Action::NoAction => {},
-					action => actions.push(action),
+				match potential {
+					Some(action) => actions.push(action),
+					None => {},
 				}
 			}
 
@@ -105,7 +105,6 @@ impl Emulator {
 						self.new_minion(advanced, false),
 					&Action::NewPocketComputer(advanced) =>
 						self.new_minion(advanced, true),
-					_ => {},
 				}
 			}
 		}

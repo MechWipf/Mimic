@@ -46,9 +46,6 @@ pub enum Action {
 
 	/// Arguments: advanced
 	NewPocketComputer(bool),
-
-	AddModem,
-	NoAction,
 }
 
 
@@ -76,6 +73,10 @@ pub struct Minion {
 
 	shortcut_timer: f64,
 	shortcut_key: Key,
+
+	modem_attached: bool,
+	previous_drag_x: i32,
+	previous_drag_y: i32,
 }
 
 
@@ -127,6 +128,10 @@ impl Minion {
 
 			shortcut_timer: -1.0,
 			shortcut_key: Key::A,
+
+			modem_attached: false,
+			previous_drag_x: -1,
+			previous_drag_y: -1,
 		}
 	}
 
@@ -241,24 +246,28 @@ impl Minion {
 	//
 
 	/// Trigger any user events.
-	pub fn trigger_events(&mut self) -> Action {
-		let mut result = Action::NoAction;
+	pub fn trigger_events(&mut self) -> Option<Action> {
+		let mut result = None;
+		let mut suppress = false;
 
 		for event in self.term.events().iter() {
 			match event {
 				&Event::KeyDown(key, ref modifiers) => {
-					result = self.trigger_shortcuts(key, modifiers);
-					match result {
-						Action::NoAction => self.trigger_key(key),
-						_ => {},
+					let (new_result, new_suppress) =
+						self.trigger_shortcuts(key, modifiers);
+					result = new_result;
+					suppress = new_suppress;
+
+					if !suppress {
+						self.trigger_key(key);
 					}
 				},
-				&Event::Character(character) if result == Action::NoAction =>
+				&Event::Character(character) if !suppress =>
 					self.trigger_char(character),
 				&Event::MouseDown(x, y, button) =>
-					self.trigger_mouse("mouseClickEvent", x, y, button),
+					self.trigger_mouse_click(x, y, button),
 				&Event::MouseDrag(x, y, button) =>
-					self.trigger_mouse("mouseDragEvent", x, y, button),
+					self.trigger_mouse_drag(x, y, button),
 				&Event::MouseScroll(_, y_delta) =>
 					self.trigger_scroll(y_delta),
 				_ => {},
@@ -268,8 +277,10 @@ impl Minion {
 		result
 	}
 
-	/// Handle keyboard shortcuts.
-	fn trigger_shortcuts(&self, key: Key, modifiers: &Vec<Modifier>) -> Action {
+	/// Handle keyboard shortcuts, returning an action for the emulator to act
+	/// on, and whether to suppress the following key event.
+	fn trigger_shortcuts(&mut self, key: Key, modifiers: &Vec<Modifier>)
+			-> (Option<Action>, bool) {
 		let mut command_down = false;
 		let mut shift_down = false;
 		let osx = os::consts::SYSNAME == "macos";
@@ -285,15 +296,23 @@ impl Minion {
 
 		if command_down {
 			match key {
-				Key::N if shift_down => Action::NewComputer(false),
-				Key::N => Action::NewComputer(true),
-				Key::B if shift_down => Action::NewPocketComputer(false),
-				Key::B => Action::NewPocketComputer(true),
-				Key::M => Action::AddModem,
-				_ => Action::NoAction
+				Key::N if shift_down => (Some(Action::NewComputer(false)), true),
+				Key::N => (Some(Action::NewComputer(true)), true),
+				Key::B if shift_down => (Some(Action::NewPocketComputer(false)), true),
+				Key::B => (Some(Action::NewPocketComputer(true)), true),
+				Key::A => {
+					if self.modem_attached {
+						self.detach_modem();
+					} else {
+						self.attach_modem();
+					}
+
+					(None, true)
+				},
+				_ => (None, false)
 			}
 		} else {
-			Action::NoAction
+			(None, false)
 		}
 	}
 
@@ -316,16 +335,35 @@ impl Minion {
 		}
 	}
 
-	/// Trigger a mouse click or drag event.
-	pub fn trigger_mouse(&self, name: &str, x: f32, y: f32, button: MouseButton) {
+	/// Trigger a mouse click event.
+	pub fn trigger_mouse_click(&self, x: f32, y: f32, button: MouseButton) {
 		let converted_button = convert::button_to_lwjgl(button);
 		let (cell_x, cell_y) = self.term.to_cell_position(x, y);
 
-		self.java_object.call(name, &[
+		self.java_object.call("mouseClickEvent", &[
 			Value::Int(converted_button),
-			Value::Int(cell_x as i32),
-			Value::Int(cell_y as i32)
+			Value::Int(cell_x as i32 + 1),
+			Value::Int(cell_y as i32 + 1),
 		], Type::Void).unwrap();
+	}
+
+	/// Trigger a mouse drag event.
+	pub fn trigger_mouse_drag(&mut self, x: f32, y: f32, button: MouseButton) {
+		let converted_button = convert::button_to_lwjgl(button);
+		let (cell_x, cell_y) = self.term.to_cell_position(x, y);
+		let rx = cell_x as i32 + 1;
+		let ry = cell_y as i32 + 1;
+
+		if rx != self.previous_drag_x || ry != self.previous_drag_y {
+			self.java_object.call("mouseDragEvent", &[
+				Value::Int(converted_button),
+				Value::Int(rx),
+				Value::Int(ry),
+			], Type::Void).unwrap();
+
+			self.previous_drag_x = rx;
+			self.previous_drag_y = ry;
+		}
 	}
 
 	/// Trigger a mouse scroll event.
@@ -346,6 +384,18 @@ impl Minion {
 	//
 	//  Functions
 	//
+
+	/// Attach a modem on the minion.
+	pub fn attach_modem(&mut self) {
+		self.java_object.call("attachModem", &[], Type::Void).unwrap();
+		self.modem_attached = true;
+	}
+
+	/// Detach the modem from the minion.
+	pub fn detach_modem(&mut self) {
+		self.java_object.call("detachModem", &[], Type::Void).unwrap();
+		self.modem_attached = false;
+	}
 
 	/// Terminate the current program on the computer.
 	pub fn terminate(&self) {

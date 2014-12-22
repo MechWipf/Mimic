@@ -10,6 +10,16 @@ The JNI library makes use only of the Java Native Interface. The library is Mac 
 
 Feel free to submit a pull request or issue if you have an improvement or feature request.
 
+### To Do
+
+* Windows and Linux support
+* App Bundles
+* ROM files
+* Improve CPU usage
+* Console API
+* HTTP enable/disable
+* Pasting
+
 ### Usage
 
 **Commands**
@@ -23,7 +33,7 @@ Command               | Description
 `Command + shift + n` | Create a new basic computer without colors.
 `Command + b`         | Create a new advanced pocket computer.
 `Command + shift + b` | Create a new basic pocket computer without colors.
-`Commnad + m`         | Add a modem on the top of the currently focused computer.
+`Commnad + a`         | Add a modem on the top of the currently focused computer.
 `Command + r`         | Reboot the currently focused computer.
 `Command + t`         | Terminate the current program in the focused computer.
 `Command + s`         | Shutdown the currently focused computer.
@@ -61,9 +71,10 @@ curl -s https://static.rust-lang.org/rustup.sh | sudo sh
 
 Then install GLFW through its [website](http://www.glfw.org/). There's some install instructions on there - should be fairly simple to follow.
 
-Then `cd` into the project folder and run:
+Make sure you also have Java installed (type `javac`), then `cd` into the project folder and run:
 
 ```
+make
 cargo run
 ```
 

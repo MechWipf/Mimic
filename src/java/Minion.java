@@ -20,6 +20,7 @@ import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.terminal.Terminal;
 
+
 public class Minion implements IComputerEnvironment {
 
 	public int id;
@@ -88,6 +89,15 @@ public class Minion implements IComputerEnvironment {
 	/*
 	 * Events
 	 */
+
+	public void attachModem() {
+		Modem peripheral = new Modem();
+		this.computer.setPeripheral(1, peripheral);
+	}
+
+	public void detachModem() {
+		this.computer.setPeripheral(2, null);
+	}
 
 	public void keyEvent(int key) {
 		this.computer.queueEvent("key", new Object[] {new Integer(key)});
