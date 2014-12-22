@@ -52,6 +52,18 @@ pub enum Action {
 }
 
 
+/// Minion initialization options.
+#[deriving(Clone, Show)]
+pub struct Options {
+	pub id: u32,
+	pub advanced: bool,
+	pub title: String,
+	pub width: u32,
+	pub height: u32,
+	pub space_limit: u64,
+}
+
+
 /// A single emulated computer.
 pub struct Minion {
 	pub term: Terminal,
@@ -70,40 +82,38 @@ pub struct Minion {
 impl Minion {
 
 	/// Create a new minion.
-	pub fn new(id: u32, advanced: bool, title: &str, width: u32, height: u32,
-			computer_class: &Class) -> Minion {
+	pub fn new(options: &Options, computer_class: &Class) -> Minion {
 		let term = Terminal::new(
-			title,
-			width,
-			height
+			options.title.as_slice(),
+			options.width,
+			options.height
 		);
 
-		Minion::from_term(term, id, advanced, width, height, computer_class)
+		Minion::from_term(term, options, computer_class)
 	}
 
 	/// Create a new minion from a parent minion.
-	pub fn from_parent(parent: &Minion, id: u32, advanced: bool, title: &str,
-			width: u32, height: u32, computer_class: &Class) -> Minion {
+	pub fn from_parent(parent: &Minion, options: &Options, computer_class: &Class) -> Minion {
 		let term = Terminal::from_parent(
 			&parent.term,
-			title,
-			width,
-			height
+			options.title.as_slice(),
+			options.width,
+			options.height
 		);
 
-		Minion::from_term(term, id, advanced, width, height, computer_class)
+		Minion::from_term(term, options, computer_class)
 	}
 
 	/// Create a minion from a terminal.
-	fn from_term(term: Terminal, id: u32, advanced: bool, width: u32, height: u32,
-			computer_class: &Class) -> Minion {
+	fn from_term(term: Terminal, options: &Options, computer_class: &Class) -> Minion {
 		let storage_dir = storage::storage().as_str().unwrap().to_string();
 		let java_object = computer_class.instance(&[
-			Value::Int(id as i32),
-			Value::Boolean(advanced),
-			Value::Int(width as i32),
-			Value::Int(height as i32),
+			Value::Int(options.id as i32),
+			Value::Boolean(options.advanced),
+			Value::Int(options.width as i32),
+			Value::Int(options.height as i32),
 			Value::String(storage_dir),
+			Value::Long(options.space_limit as i64),
 		]).unwrap();
 
 		Minion {
@@ -112,8 +122,8 @@ impl Minion {
 
 			cursor_flash: true,
 			cursor_flash_swap_time: time(),
-			width: width,
-			height: height,
+			width: options.width,
+			height: options.height,
 
 			shortcut_timer: -1.0,
 			shortcut_key: Key::A,

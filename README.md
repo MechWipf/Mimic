@@ -59,6 +59,8 @@ If you want to build the emulator by yourself, firstly install Rust. There's a s
 curl -s https://static.rust-lang.org/rustup.sh | sudo sh
 ```
 
+Then install GLFW through its [website](http://www.glfw.org/). There's some install instructions on there - should be fairly simple to follow.
+
 Then `cd` into the project folder and run:
 
 ```

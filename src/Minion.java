@@ -32,10 +32,14 @@ public class Minion implements IComputerEnvironment {
 
 	private String storageDirectory;
 
-	public Minion(int id, boolean advanced, int width, int height, String storageDirectory) {
+	private long spaceLimit;
+
+	public Minion(int id, boolean advanced, int width, int height,
+			  String storageDirectory, long spaceLimit) {
 		this.id = id;
 		this.advanced = advanced;
 		this.storageDirectory = storageDirectory;
+		this.spaceLimit = spaceLimit;
 		this.terminal = new Terminal(width, height);
 		this.computer = new Computer(this, this.terminal, id);
 		this.computer.turnOn();
@@ -159,7 +163,7 @@ public class Minion implements IComputerEnvironment {
 
 	@Override
 	public long getComputerSpaceLimit() {
-		return 2097152L;
+		return this.spaceLimit;
 	}
 
 	@Override

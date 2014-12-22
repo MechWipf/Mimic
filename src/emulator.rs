@@ -9,7 +9,7 @@ extern crate jni;
 
 use self::jni::{JavaVM, Class};
 use config::Config;
-use minion::{Minion, Action};
+use minion::{Minion, Action, Options};
 
 use storage;
 
@@ -58,25 +58,19 @@ impl Emulator {
 			format!("Computer {}", self.last_id)
 		};
 
+		let options = Options {
+			id: self.last_id as u32,
+			advanced: advanced,
+			title: title,
+			width: width,
+			height: height,
+			space_limit: self.config.space_limit,
+		};
+
 		let minion = if self.minions.len() == 0 {
-			Minion::new(
-				self.last_id as u32,
-				advanced,
-				title.as_slice(),
-				width,
-				height,
-				&self.java_class
-			)
+			Minion::new(&options, &self.java_class)
 		} else {
-			Minion::from_parent(
-				&self.minions[0],
-				self.last_id as u32,
-				advanced,
-				title.as_slice(),
-				width,
-				height,
-				&self.java_class
-			)
+			Minion::from_parent(&self.minions[0], &options, &self.java_class)
 		};
 
 		self.minions.push(minion);

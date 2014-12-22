@@ -37,6 +37,7 @@ fn main() {
 				"Failed to load configuration.",
 				"Check the command line for more information.",
 			]);
+
 			while err_window.term.is_running() {
 				err_window.update();
 			}
