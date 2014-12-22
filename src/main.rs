@@ -23,6 +23,6 @@ fn main() {
 	let config = Config::from_file(&storage::config());
 
 	let mut emulator = Emulator::new(&config);
-	emulator.new_minion();
+	emulator.new_minion(true, false);
 	emulator.run();
 }

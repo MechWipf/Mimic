@@ -12,7 +12,7 @@ use std::os;
 use std::str::CharRange;
 
 use self::terminal::Terminal;
-use self::terminal::event::{Event, Key, MouseButton};
+use self::terminal::event::{Event, Modifier, Key, MouseButton};
 use self::terminal::window::time;
 use self::jni::{Class, Object, Value, Type};
 
@@ -38,6 +38,20 @@ const VALID_CHARACTERS: &'static str = concat!(
 );
 
 
+/// An action for the emulator to perform.
+#[deriving(PartialEq)]
+pub enum Action {
+	/// Arguments: advanced
+	NewComputer(bool),
+
+	/// Arguments: advanced
+	NewPocketComputer(bool),
+
+	AddModem,
+	NoAction,
+}
+
+
 /// A single emulated computer.
 pub struct Minion {
 	pub term: Terminal,
@@ -56,23 +70,41 @@ pub struct Minion {
 impl Minion {
 
 	/// Create a new minion.
-	pub fn new(id: u32, is_color: bool, width: u32, height: u32, computer_class: &Class)
-			-> Minion {
+	pub fn new(id: u32, advanced: bool, title: &str, width: u32, height: u32,
+			computer_class: &Class) -> Minion {
+		let term = Terminal::new(
+			title,
+			width,
+			height
+		);
+
+		Minion::from_term(term, id, advanced, width, height, computer_class)
+	}
+
+	/// Create a new minion from a parent minion.
+	pub fn from_parent(parent: &Minion, id: u32, advanced: bool, title: &str,
+			width: u32, height: u32, computer_class: &Class) -> Minion {
+		let term = Terminal::from_parent(
+			&parent.term,
+			title,
+			width,
+			height
+		);
+
+		Minion::from_term(term, id, advanced, width, height, computer_class)
+	}
+
+	/// Create a minion from a terminal.
+	fn from_term(term: Terminal, id: u32, advanced: bool, width: u32, height: u32,
+			computer_class: &Class) -> Minion {
 		let storage_dir = storage::storage().as_str().unwrap().to_string();
 		let java_object = computer_class.instance(&[
 			Value::Int(id as i32),
-			Value::Boolean(is_color),
+			Value::Boolean(advanced),
 			Value::Int(width as i32),
 			Value::Int(height as i32),
 			Value::String(storage_dir),
 		]).unwrap();
-
-		let title = format!("Computer {}", id);
-		let term = Terminal::new(
-			title.as_slice(),
-			width,
-			height
-		);
 
 		Minion {
 			term: term,
@@ -199,14 +231,19 @@ impl Minion {
 	//
 
 	/// Trigger any user events.
-	pub fn trigger_events(&mut self) {
+	pub fn trigger_events(&mut self) -> Action {
+		let mut result = Action::NoAction;
+
 		for event in self.term.events().iter() {
 			match event {
-				&Event::KeyDown(key) => {
-					self.trigger_key(key);
-					self.trigger_shortcuts(key);
+				&Event::KeyDown(key, ref modifiers) => {
+					result = self.trigger_shortcuts(key, modifiers);
+					match result {
+						Action::NoAction => self.trigger_key(key),
+						_ => {},
+					}
 				},
-				&Event::Character(character) =>
+				&Event::Character(character) if result == Action::NoAction =>
 					self.trigger_char(character),
 				&Event::MouseDown(x, y, button) =>
 					self.trigger_mouse("mouseClickEvent", x, y, button),
@@ -217,11 +254,37 @@ impl Minion {
 				_ => {},
 			}
 		}
+
+		result
 	}
 
 	/// Handle keyboard shortcuts.
-	fn trigger_shortcuts(&self, key: Key) {
+	fn trigger_shortcuts(&self, key: Key, modifiers: &Vec<Modifier>) -> Action {
+		let mut command_down = false;
+		let mut shift_down = false;
+		let osx = os::consts::SYSNAME == "macos";
 
+		for modifier in modifiers.iter() {
+			match *modifier {
+				Modifier::Shift => shift_down = true,
+				Modifier::Meta if osx => command_down = true,
+				Modifier::Control => command_down = true,
+				_ => {},
+			}
+		}
+
+		if command_down {
+			match key {
+				Key::N if shift_down => Action::NewComputer(false),
+				Key::N => Action::NewComputer(true),
+				Key::B if shift_down => Action::NewPocketComputer(false),
+				Key::B => Action::NewPocketComputer(true),
+				Key::M => Action::AddModem,
+				_ => Action::NoAction
+			}
+		} else {
+			Action::NoAction
+		}
 	}
 
 	/// Trigger a key down event.
