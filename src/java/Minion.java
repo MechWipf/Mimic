@@ -57,6 +57,80 @@ public class Minion implements IComputerEnvironment {
 
 
 	/*
+	 * Properties
+	 */
+
+	public int getCursorX() {
+		return this.terminal.getCursorX();
+	}
+
+	public int getCursorY() {
+		return this.terminal.getCursorY();
+	}
+
+	public int getCursorColor() {
+		return this.terminal.getTextColour();
+	}
+
+	public boolean getCursorBlink() {
+		return this.terminal.getCursorBlink();
+	}
+
+
+	/*
+	 * Events
+	 */
+
+	public void keyEvent(int key) {
+		this.computer.queueEvent("key", new Object[] {new Integer(key)});
+	}
+
+	public void charEvent(String character) {
+		this.computer.queueEvent("char", new Object[] {character});
+	}
+
+	public void pasteEvent(String text) {
+		this.computer.queueEvent("paste", new Object[] {text});
+	}
+
+	public void mouseClickEvent(int button, int x, int y) {
+		this.computer.queueEvent("mouse_click", new Object[] {
+			new Integer(button),
+			new Integer(x),
+			new Integer(y),
+		});
+	}
+
+	public void mouseDragEvent(int button, int x, int y) {
+		this.computer.queueEvent("mouse_drag", new Object[] {
+			new Integer(button),
+			new Integer(x),
+			new Integer(y),
+		});
+	}
+
+	public void mouseScrollEvent(int direction, int x, int y) {
+		this.computer.queueEvent("mouse_scroll", new Object[] {
+			new Integer(direction),
+			new Integer(x),
+			new Integer(y),
+		});
+	}
+
+	public void terminate() {
+		this.computer.queueEvent("terminate", new Object[] {});
+	}
+
+	public void shutdown() {
+		this.computer.shutdown();
+	}
+
+	public void reboot() {
+		this.computer.reboot();
+	}
+
+
+	/*
 	 * Computer API
 	 */
 
@@ -143,11 +217,11 @@ public class Minion implements IComputerEnvironment {
 			// 	}
 			// }
 
-			if (mounts.size() > 1) {
-				IMount[] mountArray = new IMount[mounts.size()];
-				mounts.toArray(mountArray);
-				return new ComboMount(mountArray);
-			}
+			// if (mounts.size() > 1) {
+			// 	IMount[] mountArray = new IMount[mounts.size()];
+			// 	mounts.toArray(mountArray);
+			// 	return new ComboMount(mountArray);
+			// }
 
 			return jarMount;
 		} catch (IOException e) {
