@@ -32,13 +32,13 @@ public class Minion implements IComputerEnvironment {
 
 	private String storageDirectory;
 
-	public Minion(int id, boolean advanced, String storageDirectory) {
+	public Minion(int id, boolean advanced, int width, int height, String storageDirectory) {
 		this.id = id;
 		this.advanced = advanced;
 		this.storageDirectory = storageDirectory;
 
 		// TODO pass in the 51, 19
-		this.terminal = new Terminal(51, 19);
+		this.terminal = new Terminal(width, height);
 		this.computer = new Computer(this, this.terminal, id);
 		this.computer.turnOn();
 	}

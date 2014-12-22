@@ -32,10 +32,10 @@ pub fn create() {
 	}
 
 	// Configuration file
-	let config_path = config_file();
+	let config_path = config();
 	if !config_path.exists() {
 		let mut file = File::create(&config_path);
-		file.write_str(config::default()).unwrap();
+		file.write_str(config::DEFAULT).unwrap();
 	}
 }
 
@@ -69,7 +69,7 @@ pub fn storage() -> Path {
 }
 
 /// Returns the path to the configuration file.
-pub fn config_file() -> Path {
+pub fn config() -> Path {
 	let mut path = storage();
 	path.push(CONFIG_FILE_NAME);
 	path

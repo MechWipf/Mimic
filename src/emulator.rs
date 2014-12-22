@@ -8,6 +8,7 @@
 extern crate jni;
 
 use self::jni::{JavaVM, Class};
+use config::Config;
 use minion::Minion;
 
 use storage;
@@ -19,13 +20,14 @@ pub struct Emulator {
 	java_class: Class,
 	minions: Vec<Minion>,
 	last_id: i32,
+	config: Config,
 }
 
 
 impl Emulator {
 
 	/// Create a new emulator.
-	pub fn new() -> Emulator {
+	pub fn new(config: &Config) -> Emulator {
 		let mut jvm = JavaVM::new(storage::classpath().as_slice()).unwrap();
 		jvm.set_calls_destructor(false);
 
@@ -36,6 +38,7 @@ impl Emulator {
 			java_class: class,
 			minions: Vec::new(),
 			last_id: -1,
+			config: config.clone(),
 		}
 	}
 
@@ -45,6 +48,8 @@ impl Emulator {
 		self.minions.push(Minion::new(
 			self.last_id as u32,
 			true,
+			self.config.computer_width,
+			self.config.computer_height,
 			&self.java_class
 		));
 	}

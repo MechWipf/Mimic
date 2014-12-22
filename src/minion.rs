@@ -20,12 +20,6 @@ use color;
 use storage;
 
 
-/// The default width in cells of a computer.
-const DEFAULT_WIDTH: u32 = 51;
-
-/// The default height in cells of a computer.
-const DEFAULT_HEIGHT: u32 = 19;
-
 /// The duration in seconds between each cursor flash.
 const CURSOR_FLASH_RATE: f64 = 0.5;
 
@@ -47,22 +41,31 @@ pub struct Minion {
 
 	cursor_flash: bool,
 	cursor_flash_swap_time: f64,
+	width: u32,
+	height: u32,
 }
 
 
 impl Minion {
 
 	/// Create a new minion.
-	pub fn new(id: u32, is_color: bool, computer_class: &Class) -> Minion {
+	pub fn new(id: u32, is_color: bool, width: u32, height: u32, computer_class: &Class)
+			-> Minion {
 		let storage_dir = storage::storage().as_str().unwrap().to_string();
 		let java_object = computer_class.instance(&[
 			Value::Int(id as i32),
 			Value::Boolean(is_color),
+			Value::Int(width as i32),
+			Value::Int(height as i32),
 			Value::String(storage_dir),
 		]).unwrap();
 
 		let title = format!("Computer {}", id);
-		let term = Terminal::new(title.as_slice(), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		let term = Terminal::new(
+			title.as_slice(),
+			width,
+			height
+		);
 
 		Minion {
 			term: term,
@@ -70,6 +73,8 @@ impl Minion {
 
 			cursor_flash: true,
 			cursor_flash_swap_time: time(),
+			width: width,
+			height: height,
 		}
 	}
 
@@ -81,9 +86,9 @@ impl Minion {
 	/// Update the cell contents on a particular line with a Java text and color string.
 	fn update_line(&mut self, line: u32, text: &str, color: &str) {
 		let mut letter_index = 0;
-		for x in range(0, DEFAULT_WIDTH) {
+		for x in range(0, self.width) {
 			let CharRange {ch, next} = text.char_range_at(letter_index);
-			let foreground = color.char_at((x + DEFAULT_WIDTH) as uint);
+			let foreground = color.char_at((x + self.width) as uint);
 			let foreground_color = color::character_to_hex(foreground);
 			let background = color.char_at(x as uint);
 			let background_color = color::character_to_hex(background);
@@ -126,7 +131,7 @@ impl Minion {
 			self.cursor_flash_swap_time = current_time;
 		}
 
-		for y in range(0, DEFAULT_HEIGHT) {
+		for y in range(0, self.height) {
 			let text = self.java_object.call("getLine", &[Value::Int(y as i32)], Type::String)
 				.unwrap().to_string();
 			let color = self.java_object.call("getColorLine", &[Value::Int(y as i32)],
