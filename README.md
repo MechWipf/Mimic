@@ -12,30 +12,56 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 
 ### Usage
 
-Mimic is operated entirely through keyboard shortcuts, as GLFW sadly doesn't allow me to create menu bars. There are a few commands, listed below. The command key on Mac is the command key, and on Windows and Linux it's the control key.
-
 **Commands**
 
+Mimic is operated entirely through keyboard shortcuts, as GLFW sadly doesn't allow me to create menu bars. There are a few commands, listed below. The command key on Mac is the command key, and on Windows and Linux it's the control key.
+
+
 Command               | Description
---------------------- | -------------
-`Command + n`    	    | Create a new advanced computer (with colors).
-`Command + shift + n` | Create a new basic computer (without colors).
+--------------------- | ---------------------------------------------------------
+`Command + n`    	    | Create a new advanced computer.
+`Command + shift + n` | Create a new basic computer without colors.
+`Command + b`         | Create a new advanced pocket computer.
+`Command + shift + b` | Create a new basic pocket computer without colors.
 `Commnad + m`         | Add a modem on the top of the currently focused computer.
 `Command + r`         | Reboot the currently focused computer.
 `Command + t`         | Terminate the current program in the focused computer.
 `Command + s`         | Shutdown the currently focused computer.
 
+**Files**
+
+You can find Mimic's data, including computer files and configuration under:
+
+* Mac: ~/Library/Application Support/mimic
+* Linux: ~/.mimic
+* Windows: %APPDATA%\mimic
+
+The configuration is in the `config.json` file. The configuration options are:
+
+Option            | Description
+----------------- | ------------------------------------------------------------------------
+`computer width`  | The width of a terminal window in cells (number, default 51).
+`computer height` | The height of a terminal window in cells (number, default 19).
+`pocket width`    | The width of a pocket computer window in cells (number, default 26).
+`pocket height`   | The height of a pocket computer window, in cells (number, default 20).
+`enable http`     | Set to `true` to enable the HTTP API (boolean, default true).
+`space limit`     | The space limit for computers, in bytes (number, default 2097152 - 2MB).
+
+**ROM**
+
+You can add your own files to the ROM by creating a `rom` directory in the data folder (paths above), and putting your programs in there. All files in the `rom` directory will be loaded into the `rom/programs` folder at runtime.
+
 ### Building
 
-If you want to build the emulator by yourself, firstly install Rust. There's a simple command on [The Rust Guide](http://doc.rust-lang.org/guide.html) to do this:
+If you want to build the emulator by yourself, firstly install Rust. There's a simple command on the [Rust Guide](http://doc.rust-lang.org/guide.html) to do this:
 
-```bash
+```
 curl -s https://static.rust-lang.org/rustup.sh | sudo sh
 ```
 
 Then `cd` into the project folder and run:
 
-```bash
+```
 cargo run
 ```
 
