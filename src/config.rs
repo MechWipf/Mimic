@@ -35,7 +35,6 @@ pub struct Config {
 	pub computer_height: u32,
 	pub pocket_width: u32,
 	pub pocket_height: u32,
-	pub enable_http: bool,
 	pub space_limit: u64,
 }
 
@@ -67,7 +66,6 @@ impl Config {
 			computer_height: get!(tree, "computer height", as_u64) as u32,
 			pocket_width: get!(tree, "pocket width", as_u64) as u32,
 			pocket_height: get!(tree, "pocket height", as_u64) as u32,
-			enable_http: get!(tree, "enable http", as_boolean),
 			space_limit: get!(tree, "space limit", as_u64),
 		})
 	}

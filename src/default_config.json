@@ -3,6 +3,5 @@
 	"computer height": 19,
 	"pocket width": 26,
 	"pocket height": 20,
-	"space limit": 2097152,
-	"enable http": true
+	"space limit": 2097152
 }

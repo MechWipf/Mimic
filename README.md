@@ -17,8 +17,6 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * ROM files
 * Improve CPU usage
 * Console API
-* HTTP enable/disable
-* Pasting
 
 ### Usage
 
@@ -54,7 +52,6 @@ Option            | Description
 `computer height` | The height of a terminal window in cells (number, default 19).
 `pocket width`    | The width of a pocket computer window in cells (number, default 26).
 `pocket height`   | The height of a pocket computer window, in cells (number, default 20).
-`enable http`     | Set to `true` to enable the HTTP API (boolean, default true).
 `space limit`     | The space limit for computers, in bytes (number, default 2097152 - 2MB).
 
 **ROM**
