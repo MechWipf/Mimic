@@ -27,6 +27,9 @@ const CURSOR_FLASH_RATE: f64 = 0.5;
 /// The duration to hold a timed keyboard shortcut for.
 const TIMED_SHORTCUT_DURATION: f64 = 1.0;
 
+/// The duration to wait for before advancing the computer.
+const FRAME_DURATION: f64 = 0.0333;
+
 /// The valid characters that can be typed.
 const VALID_CHARACTERS: &'static str = concat!(
 	" !\"#$%&\'()*+,-./",
@@ -77,6 +80,7 @@ pub struct Minion {
 	modem_attached: bool,
 	previous_drag_x: i32,
 	previous_drag_y: i32,
+	previous_time: f64,
 }
 
 
@@ -117,12 +121,13 @@ impl Minion {
 			Value::Long(options.space_limit as i64),
 		]).unwrap();
 
+		let current_time = time();
 		Minion {
 			term: term,
 			java_object: java_object,
 
 			cursor_flash: true,
-			cursor_flash_swap_time: time(),
+			cursor_flash_swap_time: current_time,
 			width: options.width,
 			height: options.height,
 
@@ -132,6 +137,7 @@ impl Minion {
 			modem_attached: false,
 			previous_drag_x: -1,
 			previous_drag_y: -1,
+			previous_time: current_time,
 		}
 	}
 
@@ -215,10 +221,14 @@ impl Minion {
 
 	/// Update the contents of the window's cells and advance the computer's tick count.
 	pub fn advance(&mut self) {
-		self.java_object.call("advance", &[], Type::Void).unwrap();
+		// Advance
+		let current_time = time();
+		if current_time - self.previous_time > FRAME_DURATION {
+			self.java_object.call("advance", &[], Type::Void).unwrap();
+			self.previous_time = current_time;
+		}
 
 		// Check if the cursor flash needs inverting
-		let current_time = time();
 		if current_time - self.cursor_flash_swap_time >= CURSOR_FLASH_RATE {
 			self.cursor_flash = !self.cursor_flash;
 			self.cursor_flash_swap_time = current_time;

@@ -25,7 +25,7 @@ macro_rules! get(
 
 
 /// The default configuration file's contents.
-pub const DEFAULT: &'static str = include_str!("default_config.json");
+pub const DEFAULT: &'static str = include_str!("config/default.json");
 
 
 /// A set of configuration options.
