@@ -8,6 +8,7 @@
 extern crate terminal;
 extern crate jni;
 
+use std::os;
 use std::str::CharRange;
 
 use self::terminal::Terminal;
@@ -22,6 +23,9 @@ use storage;
 
 /// The duration in seconds between each cursor flash.
 const CURSOR_FLASH_RATE: f64 = 0.5;
+
+/// The duration to hold a timed keyboard shortcut for.
+const TIMED_SHORTCUT_DURATION: f64 = 1.0;
 
 /// The valid characters that can be typed.
 const VALID_CHARACTERS: &'static str = concat!(
@@ -43,6 +47,9 @@ pub struct Minion {
 	cursor_flash_swap_time: f64,
 	width: u32,
 	height: u32,
+
+	shortcut_timer: f64,
+	shortcut_key: Key,
 }
 
 
@@ -75,6 +82,9 @@ impl Minion {
 			cursor_flash_swap_time: time(),
 			width: width,
 			height: height,
+
+			shortcut_timer: -1.0,
+			shortcut_key: Key::A,
 		}
 	}
 
@@ -121,6 +131,42 @@ impl Minion {
 		}
 	}
 
+	/// Updates any timed keyboard shortcuts.
+	fn update_timed_shortcuts(&mut self) {
+		let command_down =
+			self.term.window.is_key_down(Key::LeftControl) ||
+			self.term.window.is_key_down(Key::RightControl);
+
+		if self.shortcut_timer > -1.0 {
+			if self.term.window.is_key_down(self.shortcut_key) && command_down {
+				let current_time = time();
+				if current_time - self.shortcut_timer >= TIMED_SHORTCUT_DURATION {
+					match self.shortcut_key {
+						Key::R => self.reboot(),
+						Key::S => self.shutdown(),
+						Key::T => self.terminate(),
+						_ => {},
+					}
+
+					self.shortcut_timer = -1.0;
+				}
+			} else {
+				self.shortcut_timer = -1.0;
+			}
+		} else if command_down {
+			if self.term.window.is_key_down(Key::R) {
+				self.shortcut_timer = time();
+				self.shortcut_key = Key::R;
+			} else if self.term.window.is_key_down(Key::S) {
+				self.shortcut_timer = time();
+				self.shortcut_key = Key::S;
+			} else if self.term.window.is_key_down(Key::T) {
+				self.shortcut_timer = time();
+				self.shortcut_key = Key::T;
+			}
+		}
+	}
+
 	/// Update the contents of the window's cells and advance the computer's tick count.
 	pub fn advance(&mut self) {
 		self.java_object.call("advance", &[], Type::Void).unwrap();
@@ -132,15 +178,19 @@ impl Minion {
 		}
 
 		for y in range(0, self.height) {
-			let text = self.java_object.call("getLine", &[Value::Int(y as i32)], Type::String)
-				.unwrap().to_string();
-			let color = self.java_object.call("getColorLine", &[Value::Int(y as i32)],
-				Type::String).unwrap().to_string();
+			let text = self.java_object.call("getLine", &[
+				Value::Int(y as i32),
+			], Type::String).unwrap().to_string();
+
+			let color = self.java_object.call("getColorLine", &[
+				Value::Int(y as i32),
+			], Type::String).unwrap().to_string();
 
 			self.update_line(y, text.as_slice(), color.as_slice());
 		}
 
 		self.update_cursor();
+		self.update_timed_shortcuts();
 	}
 
 
@@ -152,8 +202,10 @@ impl Minion {
 	pub fn trigger_events(&mut self) {
 		for event in self.term.events().iter() {
 			match event {
-				&Event::KeyDown(key) =>
-					self.trigger_key(key),
+				&Event::KeyDown(key) => {
+					self.trigger_key(key);
+					self.trigger_shortcuts(key);
+				},
 				&Event::Character(character) =>
 					self.trigger_char(character),
 				&Event::MouseDown(x, y, button) =>
@@ -165,6 +217,11 @@ impl Minion {
 				_ => {},
 			}
 		}
+	}
+
+	/// Handle keyboard shortcuts.
+	fn trigger_shortcuts(&self, key: Key) {
+
 	}
 
 	/// Trigger a key down event.
@@ -210,6 +267,26 @@ impl Minion {
 			Value::Int(cell_x as i32),
 			Value::Int(cell_y as i32),
 		], Type::Void).unwrap();
+	}
+
+
+	//
+	//  Functions
+	//
+
+	/// Terminate the current program on the computer.
+	pub fn terminate(&self) {
+		self.java_object.call("terminate", &[], Type::Void).unwrap();
+	}
+
+	/// Shutdown the computer.
+	pub fn shutdown(&self) {
+		self.java_object.call("shutdown", &[], Type::Void).unwrap();
+	}
+
+	/// Reboot the computer.
+	pub fn reboot(&self) {
+		self.java_object.call("reboot", &[], Type::Void).unwrap();
 	}
 
 }

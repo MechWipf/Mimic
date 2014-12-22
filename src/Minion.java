@@ -36,8 +36,6 @@ public class Minion implements IComputerEnvironment {
 		this.id = id;
 		this.advanced = advanced;
 		this.storageDirectory = storageDirectory;
-
-		// TODO pass in the 51, 19
 		this.terminal = new Terminal(width, height);
 		this.computer = new Computer(this, this.terminal, id);
 		this.computer.turnOn();
@@ -132,7 +130,11 @@ public class Minion implements IComputerEnvironment {
 	}
 
 	public void reboot() {
-		this.computer.reboot();
+		if (this.computer.isOn()) {
+			this.computer.reboot();
+		} else {
+			this.computer.turnOn();
+		}
 	}
 
 
