@@ -99,6 +99,10 @@ public class Minion implements IComputerEnvironment {
 		this.computer.setPeripheral(2, null);
 	}
 
+	public void paste(String contents) {
+		this.computer.queueEvent("paste", new Object[] {contents});
+	}
+
 	public void keyEvent(int key) {
 		this.computer.queueEvent("key", new Object[] {new Integer(key)});
 	}

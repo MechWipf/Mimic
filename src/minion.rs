@@ -309,6 +309,10 @@ impl Minion {
 
 					(None, true)
 				},
+				Key::V => {
+					self.paste();
+					(None, true)
+				},
 				_ => (None, false)
 			}
 		} else {
@@ -395,6 +399,12 @@ impl Minion {
 	pub fn detach_modem(&mut self) {
 		self.java_object.call("detachModem", &[], Type::Void).unwrap();
 		self.modem_attached = false;
+	}
+
+	/// Paste the current clipboard contents string.
+	pub fn paste(&self) {
+		let contents = self.term.window.clipboard_contents();
+		self.java_object.call("paste", &[Value::String(contents)], Type::Void).unwrap();
 	}
 
 	/// Terminate the current program on the computer.
