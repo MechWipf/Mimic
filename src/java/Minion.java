@@ -220,32 +220,18 @@ public class Minion implements IComputerEnvironment {
 			IMount jarMount = new JarMount(location, assets);
 			mounts.add(jarMount);
 
-			// Add resource packs
-			// File resourcePack = new File("resource_packs");
-			// if (resourcePack.exists() && resourcePack.isDirectory()) {
-			// 	String[] packs = resourcePack.list();
-			// 	for (String subpath : packs) {
-			// 		File pack = new File(resourcePack, subpath);
-			// 		if (pack.getName().startsWith(".")){
-			// 			continue;
-			// 		}
+			// Add additional programs folder
+			File additional = new File(storageDirectory);
+			System.out.println("Additional: " + additional.getAbsolutePath());
+			if (additional.exists() && additional.isDirectory()) {
+				mounts.add(new FileMount(additional, 0L));
+			}
 
-			// 		if (!pack.isDirectory()) {
-			// 			mounts.add(new JarMount(pack, path));
-			// 		} else {
-			// 			File subPack = new File(pack, path);
-			// 			if (subPack.exists()) {
-			// 				mounts.add(new FileMount(subPack, 0L));
-			// 			}
-			// 		}
-			// 	}
-			// }
-
-			// if (mounts.size() > 1) {
-			// 	IMount[] mountArray = new IMount[mounts.size()];
-			// 	mounts.toArray(mountArray);
-			// 	return new ComboMount(mountArray);
-			// }
+			if (mounts.size() > 1) {
+				IMount[] mountArray = new IMount[mounts.size()];
+				mounts.toArray(mountArray);
+				return new ComboMount(mountArray);
+			}
 
 			return jarMount;
 		} catch (IOException e) {

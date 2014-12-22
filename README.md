@@ -15,9 +15,6 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 ### To Do
 
 * Windows and Linux support
-* App Bundles
-* ROM files
-* Console API
 
 ### Usage
 
@@ -57,7 +54,7 @@ Option            | Description
 
 **ROM**
 
-You can add your own files to the ROM by creating a `rom` directory in the data folder (paths above), and putting your programs in there. All files in the `rom` directory will be loaded into the `rom/programs` folder at runtime.
+Add your own files to ROM by putting them inside the `programs` folder in the Mimic data folder (the paths to the data folder are listed above). These programs are also live-updating, so changes to the files are reflected in Mimic while it's running. This makes for an easy way of getting files onto all of the computers without having to do anything!
 
 ### Building
 

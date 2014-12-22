@@ -25,6 +25,9 @@ const CC_JAR_FILE_NAME: &'static str = "computercraft.jar";
 /// The name of the Mimic jar file.
 const MIMIC_JAR_FILE_NAME: &'static str = "mimic.jar";
 
+/// The name of the ROM directory.
+const ROM_DIR_NAME: &'static str = "programs";
+
 
 /// Creates the storage directory and default configuration file, if one doesn't exist.
 pub fn create() {
@@ -32,6 +35,13 @@ pub fn create() {
 	let storage_dir = storage();
 	if !storage_dir.exists() {
 		fs::mkdir(&storage_dir, io::USER_RWX).unwrap();
+	}
+
+	// ROM programs directory.
+	let mut rom_dir = storage_dir.clone();
+	rom_dir.push(ROM_DIR_NAME);
+	if !rom_dir.exists() {
+		fs::mkdir(&rom_dir, io::USER_RWX).unwrap();
 	}
 
 	// Configuration file
