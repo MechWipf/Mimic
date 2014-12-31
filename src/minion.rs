@@ -35,7 +35,7 @@ const VALID_CHARACTERS: &'static str = concat!(
 	"0123456789:;<=>?",
 	"@ABCDEFGHIJKLMNO",
 	"PQRSTUVWXYZ[\\]^_",
-	"\'abcdefghijklmno",
+	"`abcdefghijklmno",
 	"pqrstuvwxyz{|}~",
 );
 
