@@ -342,6 +342,12 @@ impl Minion {
 					(None, true)
 				},
 
+				// Close the window
+				Key::W => {
+					self.term.window.close();
+					(None, true)
+				},
+
 				// Paste
 				Key::V => {
 					self.paste();
