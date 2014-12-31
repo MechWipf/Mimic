@@ -412,7 +412,7 @@ impl Minion {
 		let x = self.term.window.cursor_x();
 		let y = self.term.window.cursor_y();
 		let (cell_x, cell_y) = self.term.to_cell_position(x, y);
-		let direction = if y_delta < 0.0 { -1 } else { 1 };
+		let direction = if y_delta < 0.0 { 1 } else { -1 };
 
 		self.java_object.call("mouseScrollEvent", &[
 			Value::Int(direction),

@@ -15,7 +15,6 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 ### To Do
 
 * Windows and Linux support
-* Fix inverted scrolling
 * Fix backticks showing as question marks
 * Fix memory leak
 
