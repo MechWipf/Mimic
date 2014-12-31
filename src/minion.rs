@@ -5,18 +5,15 @@
 //
 
 
-extern crate terminal;
-extern crate jni;
-
 use std::os;
 use std::str::CharRange;
 use std::io::timer;
 use std::time::duration::Duration;
 
-use self::terminal::Terminal;
-use self::terminal::event::{Event, Modifier, Key, MouseButton};
-use self::terminal::window::time;
-use self::jni::{Class, Object, Value, Type};
+use terminal::Terminal;
+use terminal::event::{Event, Modifier, Key, MouseButton};
+use terminal::window::time;
+use jni::{Class, Object, Value, Type};
 
 use convert;
 use color;
@@ -29,11 +26,8 @@ const CURSOR_FLASH_RATE: f64 = 0.5;
 /// The duration to hold a timed keyboard shortcut for.
 const TIMED_SHORTCUT_DURATION: f64 = 1.0;
 
-/// The duration to wait for before advancing the computer.
-const FRAME_DURATION: f64 = 0.0333;
-
 /// The desired time for one frame.
-const DESIRED_FRAME_DURATION: f64 = 1.0 / 20.0;
+const DESIRED_FRAME_DURATION: f64 = 1.0 / 60.0;
 
 /// The valid characters that can be typed.
 const VALID_CHARACTERS: &'static str = concat!(
@@ -228,10 +222,9 @@ impl Minion {
 	pub fn advance(&mut self) {
 		// Advance
 		let current_time = time();
-		if current_time - self.advance_time > FRAME_DURATION {
-			self.java_object.call("advance", &[], Type::Void).unwrap();
-			self.advance_time = current_time;
-		}
+		let delta = current_time - self.advance_time;
+		self.java_object.call("advance", &[Value::Double(delta)], Type::Void).unwrap();
+		self.advance_time = current_time;
 
 		// Check if the cursor flash needs inverting
 		if current_time - self.cursor_flash_swap_time >= CURSOR_FLASH_RATE {
@@ -269,7 +262,6 @@ impl Minion {
 	pub fn trigger_events(&mut self) -> Option<Action> {
 		let mut result = None;
 		let mut suppress = false;
-
 		let current_time = time();
 
 		for event in self.term.events().iter() {
@@ -297,7 +289,7 @@ impl Minion {
 		// Sleep until the desired duration is up.
 		let final_time = time();
 		let delta = DESIRED_FRAME_DURATION - (final_time - current_time);
-		if delta > 0.0 {
+		if delta > 0.000001 {
 			timer::sleep(Duration::nanoseconds((delta * 1000.0 * 1000.0 * 1000.0) as i64));
 		}
 

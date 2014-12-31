@@ -5,10 +5,8 @@
 //
 
 
-extern crate serialize;
-
-use self::serialize::json;
-use self::serialize::json::Json;
+use serialize::json;
+use serialize::json::Json;
 use std::io::fs::File;
 
 

@@ -5,9 +5,7 @@
 //
 
 
-extern crate terminal;
-
-use self::terminal::Terminal;
+use terminal::Terminal;
 
 
 /// The width of the error window in cells.

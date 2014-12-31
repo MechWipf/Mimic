@@ -6,6 +6,9 @@
 
 #![feature(macro_rules)]
 
+extern crate terminal;
+extern crate jni;
+extern crate serialize;
 
 use emulator::Emulator;
 use config::Config;

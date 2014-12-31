@@ -5,9 +5,7 @@
 //
 
 
-extern crate terminal;
-
-use self::terminal::event::{Key, MouseButton};
+use terminal::event::{Key, MouseButton};
 
 
 /// Converts a key to an LWJGL key code.

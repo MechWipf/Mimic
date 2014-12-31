@@ -5,9 +5,7 @@
 //
 
 
-extern crate jni;
-
-use self::jni::{JavaVM, Class};
+use jni::{JavaVM, Class};
 use config::Config;
 use minion::{Minion, Action, Options};
 

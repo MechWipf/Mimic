@@ -26,7 +26,7 @@ public class Minion implements IComputerEnvironment {
 	public int id;
 	public boolean advanced;
 
-	private long ticks;
+	private double ticks;
 
 	private Computer computer;
 	private Terminal terminal;
@@ -54,9 +54,9 @@ public class Minion implements IComputerEnvironment {
 		return this.terminal.getColourLine(line);
 	}
 
-	public void advance() {
-		this.ticks += 1;
-		this.computer.advance(0.05);
+	public void advance(double delta) {
+		this.ticks += delta * 20;
+		this.computer.advance(delta);
 	}
 
 	public void destroy() {
@@ -162,12 +162,12 @@ public class Minion implements IComputerEnvironment {
 
 	@Override
 	public int getDay() {
-		return (int)(1.0D + Math.floor(this.ticks / 24000L));
+		return (int)(1.0D + Math.floor(((long) this.ticks) / 24000L));
 	}
 
 	@Override
 	public double getTimeOfDay() {
-		return this.ticks % 24000L / 1000.0D;
+		return this.ticks % 24000.0D / 1000.0D;
 	}
 
 	@Override
@@ -222,7 +222,6 @@ public class Minion implements IComputerEnvironment {
 
 			// Add additional programs folder
 			File additional = new File(storageDirectory);
-			System.out.println("Additional: " + additional.getAbsolutePath());
 			if (additional.exists() && additional.isDirectory()) {
 				mounts.add(new FileMount(additional, 0L));
 			}

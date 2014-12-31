@@ -15,13 +15,15 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 ### To Do
 
 * Windows and Linux support
+* Fix inverted scrolling
+* Fix backticks showing as question marks
+* Fix memory leak
 
 ### Usage
 
 **Commands**
 
 Mimic is operated entirely through keyboard shortcuts, as GLFW sadly doesn't allow me to create menu bars. There are a few commands, listed below. The command key on Mac is the command key, and on Windows and Linux it's the control key.
-
 
 Command               | Description
 --------------------- | ---------------------------------------------------------
