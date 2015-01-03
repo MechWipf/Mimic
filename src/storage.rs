@@ -14,7 +14,7 @@ use config;
 
 
 /// The name of the storage directory.
-const STORAGE_DIR_NAME: &'static str = "mimic";
+const STORAGE_DIR_NAME: &'static str = "Mimic";
 
 /// The name of the configuration file.
 const CONFIG_FILE_NAME: &'static str = "config.json";
@@ -77,7 +77,7 @@ pub fn resources() -> Path {
 /// Returns the path to the storage directory.
 pub fn storage() -> Path {
 	let mut dir = home();
-	dir.push_many(&["Library", "Application Support", STORAGE_DIR_NAME]);
+	dir.push_many(&["Documents", STORAGE_DIR_NAME]);
 	dir
 }
 

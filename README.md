@@ -18,9 +18,9 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * Fix memory leak
 * Icon
 * Screenshot functionality
-* Customizable border size
 * Customizable computer folder location
 * Move default folder location to ~/Documents
+* Remove config.json from being included in ROM
 
 ### Usage
 
