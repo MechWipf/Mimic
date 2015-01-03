@@ -16,6 +16,11 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 
 * Windows and Linux support
 * Fix memory leak
+* Icon
+* Screenshot functionality
+* Customizable border size
+* Customizable computer folder location
+* Move default folder location to ~/Documents
 
 ### Usage
 
