@@ -33,9 +33,9 @@ Command               | Description
 `Command + b`         | Create a new advanced pocket computer.
 `Command + shift + b` | Create a new basic pocket computer without colors.
 `Commnad + a`         | Add a modem on the top of the currently focused computer.
-`Command + r`         | Reboot the currently focused computer.
-`Command + t`         | Terminate the current program in the focused computer.
-`Command + s`         | Shutdown the currently focused computer.
+`Control + r`         | Reboot the currently focused computer.
+`Control + t`         | Terminate the current program in the focused computer.
+`Control + s`         | Shutdown the currently focused computer.
 
 **Files**
 
