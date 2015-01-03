@@ -26,7 +26,7 @@ impl ErrorWindow {
 	/// Creates a new error window with the given message.
 	pub fn new(messages: &[&str]) -> ErrorWindow {
 		// Create a terminal
-		let mut term = Terminal::new("Error", WIDTH, HEIGHT);
+		let mut term = Terminal::new("Error", WIDTH, HEIGHT, 4, 4);
 		term.cursor_visibility(false);
 
 		// Write the title

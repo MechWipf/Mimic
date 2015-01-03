@@ -3,5 +3,7 @@
 	"computer height": 19,
 	"pocket width": 26,
 	"pocket height": 20,
-	"space limit": 2097152
+	"space limit": 2097152,
+	"border width": 4,
+	"border height": 4
 }

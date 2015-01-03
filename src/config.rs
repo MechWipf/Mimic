@@ -34,6 +34,8 @@ pub struct Config {
 	pub pocket_width: u32,
 	pub pocket_height: u32,
 	pub space_limit: u64,
+	pub border_width: u32,
+	pub border_height: u32,
 }
 
 
@@ -65,6 +67,8 @@ impl Config {
 			pocket_width: get!(tree, "pocket width", as_u64) as u32,
 			pocket_height: get!(tree, "pocket height", as_u64) as u32,
 			space_limit: get!(tree, "space limit", as_u64),
+			border_width: get!(tree, "border width", as_u64) as u32,
+			border_height: get!(tree, "border height", as_u64) as u32,
 		})
 	}
 

@@ -65,6 +65,8 @@ impl Emulator {
 			width: width,
 			height: height,
 			space_limit: self.config.space_limit,
+			border_width: self.config.border_width,
+			border_height: self.config.border_height,
 		};
 
 		// Create the minion itself

@@ -60,6 +60,8 @@ pub struct Options {
 	pub width: u32,
 	pub height: u32,
 	pub space_limit: u64,
+	pub border_width: u32,
+	pub border_height: u32,
 }
 
 
@@ -90,7 +92,9 @@ impl Minion {
 		let term = Terminal::new(
 			options.title.as_slice(),
 			options.width,
-			options.height
+			options.height,
+			options.border_width,
+			options.border_height
 		);
 
 		Minion::from_term(term, options, computer_class)
@@ -102,7 +106,9 @@ impl Minion {
 			&parent.term,
 			options.title.as_slice(),
 			options.width,
-			options.height
+			options.height,
+			options.border_width,
+			options.border_height
 		);
 
 		Minion::from_term(term, options, computer_class)

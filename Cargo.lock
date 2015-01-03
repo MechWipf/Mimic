@@ -106,7 +106,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "terminal"
 version = "0.0.1"
-source = "git+https://github.com/GravityScore/Terminal#a13eed76a2a2861172ed2fa024cab31d9bb75437"
+source = "git+https://github.com/GravityScore/Terminal#28c1802db55f35780cf996fe5238a6690fa6ed4b"
 dependencies = [
  "gl 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "glfw 0.0.1 (git+https://github.com/bjz/glfw-rs)",
