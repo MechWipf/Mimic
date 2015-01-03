@@ -117,12 +117,15 @@ impl Minion {
 	/// Create a minion from a terminal.
 	fn from_term(term: Terminal, options: &Options, computer_class: &Class) -> Minion {
 		let storage_dir = storage::storage().as_str().unwrap().to_string();
+		let rom_dir = storage::rom().as_str().unwrap().to_string();
+
 		let java_object = computer_class.instance(&[
 			Value::Int(options.id as i32),
 			Value::Boolean(options.advanced),
 			Value::Int(options.width as i32),
 			Value::Int(options.height as i32),
 			Value::String(storage_dir),
+			Value::String(rom_dir),
 			Value::Long(options.space_limit as i64),
 		]).unwrap();
 

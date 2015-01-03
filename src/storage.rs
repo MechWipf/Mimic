@@ -26,7 +26,7 @@ const CC_JAR_FILE_NAME: &'static str = "computercraft.jar";
 const MIMIC_JAR_FILE_NAME: &'static str = "mimic.jar";
 
 /// The name of the ROM directory.
-const ROM_DIR_NAME: &'static str = "programs";
+const ROM_DIR_NAME: &'static str = "rom";
 
 
 /// Creates the storage directory and default configuration file, if one doesn't exist.
@@ -44,12 +44,26 @@ pub fn create() {
 		fs::mkdir(&rom_dir, io::USER_RWX).unwrap();
 	}
 
+	// Add a programs directory inside the ROM folder.
+	let mut programs_dir = rom_dir.clone();
+	programs_dir.push("programs");
+	if !programs_dir.exists() {
+		fs::mkdir(&programs_dir, io::USER_RWX).unwrap();
+	}
+
 	// Configuration file
 	let config_path = config();
 	if !config_path.exists() {
 		let mut file = File::create(&config_path);
 		file.write_str(config::DEFAULT).unwrap();
 	}
+}
+
+/// Returns the path to the ROM folder inside the storage directory.
+pub fn rom() -> Path {
+	let mut root = storage();
+	root.push(ROM_DIR_NAME);
+	root
 }
 
 /// Returns the path to the home directory.

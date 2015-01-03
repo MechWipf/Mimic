@@ -19,8 +19,6 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * Icon
 * Screenshot functionality
 * Customizable computer folder location
-* Move default folder location to ~/Documents
-* Remove config.json from being included in ROM
 
 ### Usage
 
@@ -56,10 +54,14 @@ Option            | Description
 `pocket width`    | The width of a pocket computer window in cells (number, default 26).
 `pocket height`   | The height of a pocket computer window, in cells (number, default 20).
 `space limit`     | The space limit for computers, in bytes (number, default 2097152 - 2MB).
+`border width`    | The width of the black border around computers in pixels (number, default 4).
+`border height`   | The height of the black border around computers in pixels (number, default 4).
 
 **ROM**
 
-Add your own files to ROM by putting them inside the `programs` folder in the Mimic data folder (the paths to the data folder are listed above). These programs are also live-updating, so changes to the files are reflected in Mimic while it's running. This makes for an easy way of getting files onto all of the computers without having to do anything!
+Add your own files to ROM by putting them inside the `rom` folder in the Mimic data folder (the paths to the data folder are listed above). This replicates the actual ROM folder, so adding `rom/bios.lua` will override the ComputerCraft BIOS with your own, and placing programs in `rom/programs` will add programs to all computers.
+
+These programs are also live-updating, so changes to the files are reflected in Mimic while it's running. This makes for an easy way of getting files onto all of the computers without having to do anything!
 
 ### Building
 

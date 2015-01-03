@@ -32,14 +32,16 @@ public class Minion implements IComputerEnvironment {
 	private Terminal terminal;
 
 	private String storageDirectory;
+	private String romDirectory;
 
 	private long spaceLimit;
 
 	public Minion(int id, boolean advanced, int width, int height,
-			  String storageDirectory, long spaceLimit) {
+			String storageDirectory, String romDirectory, long spaceLimit) {
 		this.id = id;
 		this.advanced = advanced;
 		this.storageDirectory = storageDirectory;
+		this.romDirectory = romDirectory;
 		this.spaceLimit = spaceLimit;
 		this.terminal = new Terminal(width, height);
 		this.computer = new Computer(this, this.terminal, id);
@@ -221,7 +223,7 @@ public class Minion implements IComputerEnvironment {
 			mounts.add(jarMount);
 
 			// Add additional programs folder
-			File additional = new File(storageDirectory);
+			File additional = new File(romDirectory);
 			if (additional.exists() && additional.isDirectory()) {
 				mounts.add(new FileMount(additional, 0L));
 			}
