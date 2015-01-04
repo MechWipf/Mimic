@@ -19,6 +19,7 @@ Feel free to submit a pull request or issue if you have an improvement or featur
 * Icon
 * Screenshot functionality
 * Customizable computer folder location
+* Increase the size of the other pixels to be consistent with in-game
 
 ### Usage
 
