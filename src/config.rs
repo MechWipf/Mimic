@@ -27,7 +27,7 @@ pub const DEFAULT: &'static str = include_str!("config/default.json");
 
 
 /// A set of configuration options.
-#[deriving(Show, Clone)]
+#[derive(Show, Clone)]
 pub struct Config {
 	pub computer_width: u32,
 	pub computer_height: u32,

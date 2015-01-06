@@ -41,7 +41,7 @@ const VALID_CHARACTERS: &'static str = concat!(
 
 
 /// An action for the emulator to perform.
-#[deriving(PartialEq)]
+#[derive(PartialEq)]
 pub enum Action {
 	/// Arguments: advanced
 	NewComputer(bool),
@@ -52,7 +52,7 @@ pub enum Action {
 
 
 /// Minion initialization options.
-#[deriving(Clone, Show)]
+#[derive(Clone, Show)]
 pub struct Options {
 	pub id: u32,
 	pub advanced: bool,
