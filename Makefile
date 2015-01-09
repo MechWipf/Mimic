@@ -22,4 +22,5 @@ osxbundle: java
 	mkdir ./Mimic.app/Contents/Resources
 	cp src/config/Info.plist ./Mimic.app/Contents/Info.plist
 	cp ./Resources/* ./Mimic.app/Contents/Resources
+	cp ./src/config/Icon.icns ./Mimic.app/Contents/Resources
 	cp ./target/mimic ./Mimic.app/Contents/MacOS/mimic
