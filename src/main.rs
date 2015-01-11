@@ -4,7 +4,6 @@
 //! A ComputerCraft emulator.
 //
 
-#![feature(macro_rules)]
 
 extern crate terminal;
 extern crate jni;

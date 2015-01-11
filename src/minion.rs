@@ -159,9 +159,9 @@ impl Minion {
 		let mut letter_index = 0;
 		for x in range(0, self.width) {
 			let CharRange {ch, next} = text.char_range_at(letter_index);
-			let foreground = color.char_at((x + self.width) as uint);
+			let foreground = color.char_at((x + self.width) as usize);
 			let foreground_color = color::character_to_hex(foreground);
-			let background = color.char_at(x as uint);
+			let background = color.char_at(x as usize);
 			let background_color = color::character_to_hex(background);
 
 			self.term.character(ch, x, line);

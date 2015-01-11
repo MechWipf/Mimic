@@ -52,7 +52,7 @@ impl Config {
 
 		match json {
 			Ok(decoded) => Config::from_json(decoded),
-			Err(err) => Err(format!("Failed to decode JSON file: {}", err)),
+			Err(err) => Err(format!("Failed to decode JSON file: {:?}", err)),
 		}
 	}
 
